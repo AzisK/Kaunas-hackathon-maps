@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Circles</title>
+    <style>
+      #map {
+        height: 100%;
+      }
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script type="text/javascript" src="krepsiai.js"></script>
+    <script>
+      var map, geocoder;
+      var aiksteles = [];
+
+      function sleep (time) {
+        return new Promise((resolve) => setTimeout(resolve, time));
+      }
+
+      function codeAddress(address, index) {
+        sleep(index * 500).then(() => {
+          console.log('Getting coords for address ', address)
+          geocoder.geocode( { 'address': address}, function(results, status) {
+            if (status == 'OK') {
+              var adresas = results[0].geometry.location;
+              krepsiai[index]['lat'] = adresas.lat();
+              krepsiai[index]['lng'] = adresas.lng();
+
+              new google.maps.Marker({
+                position: {lat: adresas.lat(), lng: adresas.lng()},
+                map: map
+              })
+              console.log('Got it! lat:', adresas.lat(), ', long:', adresas.lng());
+            } else {
+              console.log('Geocode was not successful for the following reason: ' + status);
+            }
+          });
+        });      
+      }
+
+      function getCoords() {
+        krepsiai.forEach(function(krepsys, index) {
+          codeAddress(krepsys.adresas, index)
+        });
+      }
+
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 7,
+          center: {lat: 54.9, lng: 23.9},
+          mapTypeId: 'terrain'
+        });
+
+        geocoder = new google.maps.Geocoder();
+
+        getCoords();
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=API_KEY&callback=initMap">
+    </script>
+  </body>
+</html>
