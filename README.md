@@ -6,3 +6,5 @@ Duomenų atvaizdavimas žemėlapyje (pavyzdžiai)
 https://developers.google.com/maps/documentation/javascript/get-api-key
 
 2. Kiekvieno pavyzdinio projekto index.html faile reikia pasikeisti API_KEY į saviškį
+
+Duomenys Geo-kodams ir Heatmap paimti iš Kaunas Open Data 2018
